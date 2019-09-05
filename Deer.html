@@ -1,0 +1,168 @@
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>My first X3DOM page</title>
+    <script type='text/javascript' src='https://www.x3dom.org/download/x3dom.js'> </script>
+    <link rel='stylesheet' type='text/css' href='https://www.x3dom.org/download/x3dom.css'/>
+
+    <style>
+        .button {
+          background-color: #4CAF50;
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+        }
+
+        .main {
+        float: left;
+        }
+
+
+    </style>
+
+</head>
+<body>
+<h1>Blueloop 3D</h1>
+
+
+<script>
+
+    function cambiar_tex()
+    {
+        var intruso_shader = document.getElementById('Deer__intruso_id');
+        var nuevo_intruso = intruso_shader.cloneNode(true);
+        nuevo_intruso.setAttribute('DEF','NI');
+        var nuevaTextura = nuevo_intruso.children[0];
+        nuevaTextura.setAttribute('url','_DSC9061_2.jpg');
+        nuevo_intruso.appendChild(nuevaTextura);
+        document.getElementById('Deer__materiales').appendChild(nuevo_intruso);
+        
+
+        var elappar = document.getElementById('Deer__brillito');
+        if(elappar.children.length>0)
+        {
+            elappar.children[0].remove();
+        }
+        var nuevo_M = document.createElement('CommonSurfaceShader');
+        nuevo_M.setAttribute('USE','NI');
+        elappar.appendChild(nuevo_M);
+    }
+
+    function duplicar()
+    {
+        var oldZ = document.getElementById('latr_zapa')
+        var nuevoZapato = oldZ.cloneNode(true);
+        document.getElementById('tr_fuera').appendChild(nuevoZapato);
+        nuevoZapato.setAttribute('translation','0 0 1');
+        oldZ.remove
+    }
+
+function verPuntoDeVista()
+{
+    document.getElementById('v2').setAttribute('bind','true');
+}
+
+
+    function crearYcolocar(nDeElemento,elpadre)
+    {
+        var nuevoElemento = document.createElement(nDeElemento);
+        elpadre.appendChild(nuevoElemento);
+    }
+    function inocular()
+    {
+        var intruso_shader = document.getElementById('Deer__intruso_id');
+        console.log(intruso_shader);
+        intruso_shader.appendChild(nodo_imageTexture('_DSC9048.JPG','diffuseTexture'));
+        intruso_shader.appendChild(nodo_imageTexture('_DSC9048_normal.jpg','normalTexture'));
+        intruso_shader.appendChild(nodo_imageTexture('_DSC9048_specular.jpg','specularTexture'));
+        intruso_shader.setAttribute('specularFactor','0 0 0');
+        intruso_shader.setAttribute('shininessFactor','.8');
+    }
+    // creacion de nodo ImageTexture con 'url' y 'containerField'
+    function nodo_imageTexture(laUrl,elC_Field)
+    {
+        var nuevaTextura =document.createElement('ImageTexture');
+        nuevaTextura.setAttribute('url',laUrl);
+        nuevaTextura.setAttribute('containerField',elC_Field);
+        return nuevaTextura;
+    }
+
+
+    function redNose(elshaderDeReemplazo)
+    {
+        // if(document.getElementById('Deer__flakes').getAttribute('diffuseFactor')!= '1 0 0')
+        //     document.getElementById('Deer__flakes').setAttribute('diffuseFactor', '1 0 0');
+        // else
+        //     document.getElementById('Deer__flakes').setAttribute('diffuseFactor', '0 0 1');
+        // var cambioDeMat = document.getElementById('Deer__brillito');
+        // // console.log("entro" + document.getElementById('Deer__brillito').children.length);
+        var elappar = document.getElementById('Deer__brillito');
+        if(elappar.children.length==0){
+            var nuevo_M = document.createElement('CommonSurfaceShader');
+        nuevo_M.setAttribute('USE','elManha');
+        elappar.appendChild(nuevo_M);
+        }
+        else{
+            if(elappar.children[0].getAttribute('USE')=="elgramado"){
+                elappar.children[0].remove();
+                var nuevo_M = document.createElement('CommonSurfaceShader');
+                nuevo_M.setAttribute('USE',elshaderDeReemplazo);
+                // nuevo_M.setAttribute('USE','elintruso_use');
+                elappar.appendChild(nuevo_M);
+            }
+            else{
+                elappar.children[0].remove();
+                var nuevo_M = document.createElement('CommonSurfaceShader');
+                nuevo_M.setAttribute('USE','elgramado');
+                elappar.appendChild(nuevo_M);
+            }
+        }
+    }    
+</script>
+<p>
+    Ejemplo para solucion con respecto al uso de materiales en un entorno 3d real
+</p>
+<div>
+    <div class ='main'>
+        <div> 
+            <x3d width='800px' height='600px' version="3.0" profile="Immersive" xmlns:xsd="http://www.w3.org/2001/XMLSchema-instance" xsd:noNamespaceSchemaLocation="http://www.web3d.org/specifications/x3d-3.0.xsd" >
+                <scene>
+                    <!-- <Fog bind='false' color='(1 0 0)' description='""' fogType='"LINEAR"' isActive='false' metadata='X3DMetadataObject' visibilityRange='35' ></Fog> -->
+                    <Background 
+                        skyColor='(1 1 1)'>
+                    </Background>
+                    <viewpoint id='vp' position="-12 1.6 7" orientation="-.14 -.98 -.03 1.046" fieldOfView="0.4"></viewpoint>
+                    <viewpoint id='v2' position="-3.7 -1.53 0.81" orientation="0 -1 0.06 1.5" description= 'camera'></viewpoint>
+                    <Inline nameSpaceName="Deer" mapDEFToID="false" url="zapatilla_prueba.x3d" ></inline>
+                    <transform id='tr_fuera'>
+
+                    </transform>
+                    
+                </scene>
+            </x3d>
+            
+            
+        </div>
+        
+    </div>
+    <div class ='main'>
+    <button type="button" class='button'  onclick='redNose("intruso");' >materiales</button>
+    <button type="button" class='button'  onclick='inocular();' >inocular</button>
+    <button type="button" class='button'  onclick='verPuntoDeVista();' >puntodevista</button>
+    <button type="button" class='button'  onclick='cambiar_tex();' >cambiar textura</button>
+    <!-- <button type="button" class='button'  onclick='duplicar();' >duplicar</button> -->
+    </div>
+
+</div>
+
+
+
+
+</body>
+</html>
